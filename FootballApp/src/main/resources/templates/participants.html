@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Participants</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+<h1>All Participants</h1>
+
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>User Name</th>
+        <th>Match ID</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="participant : ${participants}">
+        <td th:text="${participant.id}"></td>
+        <td th:text="${participant.userName}"></td>
+        <td th:text="${participant.matchId}"></td>
+    </tr>
+    </tbody>
+</table>
+
+<h2>Assign Participant to Match</h2>
+<form action="/participants/assign" method="post">
+    <label for="participantId">Participant ID:</label>
+    <input type="number" id="participantId" name="participantId" required>
+
+    <label for="matchId">Match ID:</label>
+    <input type="number" id="matchId" name="matchId" required>
+
+    <button type="submit">Assign</button>
+</form>
+</body>
+</html>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matches</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+<h1>All Matches</h1>
+
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Location</th>
+        <th>Date & Time</th>
+        <th>Current Players</th>
+        <th>Max Players</th>
+        <th>Organizer</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="match : ${matches}">
+        <td th:text="${match.id}"></td>
+        <td th:text="${match.location}"></td>
+        <td th:text="${match.dateTime}"></td>
+        <td th:text="${match.currentPlayers}"></td>
+        <td th:text="${match.maxPlayers}"></td>
+        <td th:text="${match.organizerName}"></td>
+    </tr>
+    </tbody>
+</table>
+
+<h2>Add New Match</h2>
+<form action="/matches/create" method="post">
+    <label for="location">Location:</label>
+    <input type="text" id="location" name="location" required>
+
+    <label for="dateTime">Date & Time:</label>
+    <input type="text" id="dateTime" name="dateTime" required>
+
+    <label for="maxPlayers">Max Players:</label>
+    <input type="number" id="maxPlayers" name="maxPlayers" required>
+
+    <label for="organizerId">Organizer:</label>
+    <select id="organizerId" name="organizerId" required>
+        <option th:each="organizer : ${organizers}" th:value="${organizer.id}" th:text="${organizer.name}">
+        </option>
+    </select>
+
+    <button type="submit">Create Match</button>
+</form>
+</body>
+</html>

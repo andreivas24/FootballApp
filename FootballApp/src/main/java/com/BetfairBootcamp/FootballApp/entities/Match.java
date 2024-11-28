@@ -1,5 +1,7 @@
 package com.BetfairBootcamp.FootballApp.entities;
 
+import com.BetfairBootcamp.FootballApp.subscription.MatchObserver;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -38,4 +40,14 @@ public class Match {
 
     @OneToMany(mappedBy = "match", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Participant> participants = new ArrayList<>();
+
+    @Transient
+    private MatchObserver matchObserver = new MatchObserver();
+
+    public void notifyOrganizer(String message) {
+        if (organizer != null) {
+            matchObserver.addObserver(organizer);
+            matchObserver.notifyObservers(message);
+        }
+    }
 }

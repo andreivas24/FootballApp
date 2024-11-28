@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matches</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+<h1>All Matches</h1>
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Location</th>
+        <th>Date</th>
+        <th>Current Players</th>
+        <th>Max Players</th>
+        <th>Organizer</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="match : ${matches}">
+        <td th:text="${match.id}"></td>
+        <td th:text="${match.location}"></td>
+        <td th:text="${match.dateTime}"></td>
+        <td th:text="${match.currentPlayers}"></td>
+        <td th:text="${match.maxPlayers}"></td>
+        <td th:text="${match.organizerName}"></td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

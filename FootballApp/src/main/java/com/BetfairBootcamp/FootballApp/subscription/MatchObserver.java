@@ -18,7 +18,6 @@ public class MatchObserver {
 
     public void notifyObservers(String message) {
         for (User observer : observers) {
-            // Logic to send notifications (e.g., via email or UI updates)
             System.out.println("Notifying " + observer.getName() + ": " + message);
         }
     }

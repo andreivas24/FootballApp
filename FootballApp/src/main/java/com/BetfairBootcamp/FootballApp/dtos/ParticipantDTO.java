@@ -1,14 +1,14 @@
 package com.BetfairBootcamp.FootballApp.dtos;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
+@Data
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class ParticipantDTO {
     private Long id;
-    private Long userId;
+    private String userName;
     private Long matchId;
 }

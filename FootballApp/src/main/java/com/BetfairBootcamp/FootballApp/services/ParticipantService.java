@@ -11,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class ParticipantService {
@@ -20,11 +22,9 @@ public class ParticipantService {
     private final MatchRepository matchRepository;
 
     public ParticipantDTO addParticipant(ParticipantDTO participantDTO) {
-        // Retrieve the User entity by userId
-        User user = userRepository.findById(participantDTO.getUserId())
-                .orElseThrow(() -> new RuntimeException("User not found with ID: " + participantDTO.getUserId()));
+        User user = userRepository.findByName(participantDTO.getUserName())
+                .orElseThrow(() -> new RuntimeException("User not found with name: " + participantDTO.getUserName()));
 
-        // Create a Participant with the retrieved User
         Participant participant = Participant.builder()
                 .user(user)
                 .build();
@@ -34,28 +34,76 @@ public class ParticipantService {
         return mapToDTO(savedParticipant);
     }
 
-    public ParticipantDTO assignMatch(Long participantId, Long matchId) {
+    public ParticipantDTO assignPlayerToMatch(Long participantId, Long matchId) {
         Participant participant = participantRepository.findById(participantId)
                 .orElseThrow(() -> new RuntimeException("Participant not found with ID: " + participantId));
 
         Match match = matchRepository.findById(matchId)
                 .orElseThrow(() -> new RuntimeException("Match not found with ID: " + matchId));
 
-        participant.setMatch(match);
-        Participant updatedParticipant = participantRepository.save(participant);
+        if (match.getCurrentPlayers() >= match.getMaxPlayers()) {
+            throw new RuntimeException("Match is already full!");
+        }
 
+        participant.setMatch(match);
+        match.setCurrentPlayers(match.getCurrentPlayers() + 1);
+
+        match.notifyOrganizer("A new participant has joined the match!");
+
+        if (match.getCurrentPlayers() == match.getMaxPlayers()) {
+            match.notifyOrganizer("The match is now full!");
+        }
+
+        participantRepository.save(participant);
+        matchRepository.save(match);
+
+        return mapToDTO(participant);
+    }
+
+    public ParticipantDTO mapToDTO(Participant participant) {
+        ParticipantDTO dto = new ParticipantDTO();
+        dto.setId(participant.getId());
+        dto.setUserName(participant.getUser() != null ? participant.getUser().getName() : "Unknown User");
+        dto.setMatchId(participant.getMatch() != null ? participant.getMatch().getId() : null);
+        return dto;
+    }
+
+    public void deleteParticipant(Long id) {
+        if (!participantRepository.existsById(id)) {
+            throw new RuntimeException("Participant not found with ID: " + id);
+        }
+        participantRepository.deleteById(id);
+    }
+
+    public ParticipantDTO updateParticipant(Long id, ParticipantDTO participantDTO) {
+        Participant participant = participantRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Participant not found with ID: " + id));
+
+        User user = userRepository.findByName(participantDTO.getUserName())
+                .orElseThrow(() -> new RuntimeException("User not found with name: " + participantDTO.getUserName()));
+        participant.setUser(user);
+
+        if (participantDTO.getMatchId() != null) {
+            Match match = matchRepository.findById(participantDTO.getMatchId())
+                    .orElseThrow(() -> new RuntimeException("Match not found with ID: " + participantDTO.getMatchId()));
+            participant.setMatch(match);
+        } else {
+            participant.setMatch(null);
+        }
+
+        Participant updatedParticipant = participantRepository.save(participant);
         return mapToDTO(updatedParticipant);
     }
 
+    public ParticipantDTO getParticipantById(Long id) {
+        Participant participant = participantRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Participant not found with ID: " + id));
+        return mapToDTO(participant);
+    }
 
-    // Mapping to DTO
-    private ParticipantDTO mapToDTO(Participant participant) {
-        ParticipantDTO dto = new ParticipantDTO();
-        dto.setId(participant.getId());
-        dto.setUserId(participant.getUser().getId());
-        if (participant.getMatch() != null) {
-            dto.setMatchId(participant.getMatch().getId());
-        }
-        return dto;
+    public List<ParticipantDTO> getAllParticipants() {
+        return participantRepository.findAll().stream()
+                .map(this::mapToDTO)
+                .toList();
     }
 }
