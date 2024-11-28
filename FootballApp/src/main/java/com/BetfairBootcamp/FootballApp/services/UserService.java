@@ -27,7 +27,7 @@ public class UserService {
         return mapToDTO(user);
     }
 
-    private UserDTO mapToDTO(User user) {
+    public UserDTO mapToDTO(User user) {
         UserDTO userDTO = new UserDTO();
         userDTO.setId(user.getId());
         userDTO.setName(user.getName());
@@ -42,17 +42,19 @@ public class UserService {
                 .toList();
     }
 
-    public UserDTO updateUser(Long id, User updatedUser) {
+    public UserDTO updateUser(Long id, UserDTO userDTO) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found with ID: " + id));
 
-        user.setName(updatedUser.getName());
-        user.setEmail(updatedUser.getEmail());
-        user.setRole(updatedUser.getRole());
-        
+        user.setName(userDTO.getName());
+        user.setEmail(userDTO.getEmail());
+        user.setRole(userDTO.getRole());
+
         User savedUser = userRepository.save(user);
+
         return mapToDTO(savedUser);
     }
+
 
     public void deleteUser(Long id) {
         if (!userRepository.existsById(id)) {

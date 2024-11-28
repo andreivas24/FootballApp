@@ -32,24 +32,33 @@
     </tbody>
 </table>
 
-<h2>Add New Match</h2>
-<form action="/matches/create" method="post">
-    <label for="location">Location:</label>
-    <input type="text" id="location" name="location" required>
+<div th:if="${isOrganizer}">
+    <h2>Add New Match</h2>
+    <form action="/matches/create" method="post">
+        <label for="location">Location:</label>
+        <input type="text" id="location" name="location" required>
 
-    <label for="dateTime">Date & Time:</label>
-    <input type="text" id="dateTime" name="dateTime" required>
+        <label for="dateTime">Date & Time:</label>
+        <input type="datetime-local" id="dateTime" name="dateTime" required>
 
-    <label for="maxPlayers">Max Players:</label>
-    <input type="number" id="maxPlayers" name="maxPlayers" required>
+        <label for="maxPlayers">Max Players:</label>
+        <input type="number" id="maxPlayers" name="maxPlayers" required>
 
-    <label for="organizerId">Organizer:</label>
-    <select id="organizerId" name="organizerId" required>
-        <option th:each="organizer : ${organizers}" th:value="${organizer.id}" th:text="${organizer.name}">
-        </option>
-    </select>
+        <label for="organizer">Organizer:</label>
+        <select id="organizer" name="organizerId" required>
+            <option th:each="organizer : ${organizers}"
+                    th:value="${organizer.id}"
+                    th:text="${organizer.name}">
+            </option>
+        </select>
 
-    <button type="submit">Create Match</button>
-</form>
+        <button type="submit">Create Match</button>
+    </form>
+</div>
+
+<div th:if="${!isOrganizer}">
+    <p>You must be an organizer to create a match.</p>
+</div>
+
 </body>
 </html>

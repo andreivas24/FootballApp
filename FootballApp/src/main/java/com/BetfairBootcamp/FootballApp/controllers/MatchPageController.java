@@ -22,9 +22,14 @@ public class MatchPageController {
 
     @GetMapping("/page")
     public String getMatchesPage(Model model) {
-        List<MatchDTO> matches = matchService.getAllMatches();
-        model.addAttribute("matches", matches);
-        model.addAttribute("organizers", userRepository.findAll());
+        model.addAttribute("matches", matchService.getAllMatches());
+
+        List<User> organizers = userRepository.findAllByRole("ORGANIZER");
+        model.addAttribute("organizers", organizers);
+
+        boolean isOrganizer = !organizers.isEmpty();
+        model.addAttribute("isOrganizer", isOrganizer);
+
         return "matches";
     }
 

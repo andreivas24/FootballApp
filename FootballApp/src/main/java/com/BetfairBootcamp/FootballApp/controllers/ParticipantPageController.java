@@ -33,10 +33,22 @@ public class ParticipantPageController {
         return "participants";
     }
 
+    @PostMapping("/add")
+    public String addParticipant(@RequestParam String userName, @RequestParam(required = false) Long newMatchId) {
+        participantService.addParticipant(userName, newMatchId);
+        return "redirect:/participants";
+    }
+
+    @PostMapping("/delete")
+    public String deleteParticipant(@RequestParam Long participantId) {
+        participantService.deleteParticipant(participantId);
+        return "redirect:/participants";
+    }
+
     @PostMapping("/assign")
     public String assignParticipantToMatch(@RequestParam Long participantId, @RequestParam Long matchId) {
         participantService.assignPlayerToMatch(participantId, matchId);
-        return "redirect:/participants"; // Reload the page after assignment
+        return "redirect:/participants";
     }
 }
 

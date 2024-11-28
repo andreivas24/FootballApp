@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Users</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+<h1>All Users</h1>
+
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Role</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="user : ${users}">
+        <td th:text="${user.id}"></td>
+        <td th:text="${user.name}"></td>
+        <td th:text="${user.email}"></td>
+        <td th:text="${user.role}"></td>
+        <td>
+            <!-- Update Button -->
+            <button class="update-button"
+                    onclick="populateUpdateForm(
+                        '[[${user.id}]]',
+                        '[[${user.name}]]',
+                        '[[${user.email}]]',
+                        '[[${user.role}]]')">
+                Update
+            </button>
+
+            <!-- Delete Button -->
+            <form action="/users/delete" method="post" style="display: inline;">
+                <input type="hidden" name="id" th:value="${user.id}">
+                <button type="submit" onclick="return confirm('Are you sure you want to delete this user?');">
+                    Delete
+                </button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<h2>Add New User</h2>
+<form action="/users/register" method="post">
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name" required>
+
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" required>
+
+    <label for="password">Password:</label>
+    <input type="password" id="password" name="password" required>
+
+    <label for="role">Role:</label>
+    <select id="role" name="role" required>
+        <option value="PLAYER">Player</option>
+        <option value="ORGANIZER">Organizer</option>
+    </select>
+
+    <button type="submit">Register</button>
+</form>
+
+<h2>Update User</h2>
+<form action="/users/update" method="post">
+    <label for="updateName">Id:</label>
+    <input type="number" id="updateId" name="id">
+
+    <label for="updateName">Name:</label>
+    <input type="text" id="updateName" name="name" required>
+
+    <label for="updateEmail">Email:</label>
+    <input type="email" id="updateEmail" name="email" required>
+
+    <label for="updateRole">Role:</label>
+    <select id="updateRole" name="role" required>
+        <option value="PLAYER">Player</option>
+        <option value="ORGANIZER">Organizer</option>
+    </select>
+
+    <button type="submit">Update</button>
+</form>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const updateForm = document.querySelector('form[action="/users/update"]');
+        if (updateForm) {
+            updateForm.addEventListener('submit', function () {
+                console.log("ID Value: " + document.getElementById('updateId').value);
+            });
+        } else {
+            console.error("Update form not found in the DOM.");
+        }
+    });
+</script>
+
+<script>
+    function populateUpdateForm(id, name, email, role) {
+        console.log("Populating Update Form");
+        console.log("ID: " + id);
+        console.log("Name: " + name);
+        console.log("Email: " + email);
+        console.log("Role: " + role);
+
+        document.getElementById('updateId').value = id;
+        document.getElementById('updateName').value = name;
+        document.getElementById('updateEmail').value = email;
+        document.getElementById('updateRole').value = role;
+    }
+</script>
+
+</body>
+</html>

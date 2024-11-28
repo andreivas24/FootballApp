@@ -21,16 +21,26 @@ public class ParticipantService {
     private final UserRepository userRepository;
     private final MatchRepository matchRepository;
 
-    public ParticipantDTO addParticipant(ParticipantDTO participantDTO) {
-        User user = userRepository.findByName(participantDTO.getUserName())
-                .orElseThrow(() -> new RuntimeException("User not found with name: " + participantDTO.getUserName()));
+    public ParticipantDTO addParticipant(String userName, Long newMatchId) {
+        User user = userRepository.findByName(userName)
+                .orElseThrow(() -> new RuntimeException("User not found with name: " + userName));
+
+        if (newMatchId != null && participantRepository.existsByUserAndMatchId(user.getId(), newMatchId)) {
+            throw new RuntimeException("Participant already exists for this user and match");
+        }
+
+        Match match = null;
+        if (newMatchId != null) {
+            match = matchRepository.findById(newMatchId)
+                    .orElseThrow(() -> new RuntimeException("Match not found with ID: " + newMatchId));
+        }
 
         Participant participant = Participant.builder()
                 .user(user)
+                .match(match)
                 .build();
 
         Participant savedParticipant = participantRepository.save(participant);
-
         return mapToDTO(savedParticipant);
     }
 

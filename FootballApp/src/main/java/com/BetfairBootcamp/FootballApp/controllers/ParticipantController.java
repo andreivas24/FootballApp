@@ -18,8 +18,8 @@ public class ParticipantController {
     private final ParticipantService participantService;
 
     @PostMapping("/add")
-    public ParticipantDTO addParticipant(@RequestBody ParticipantDTO participantDTO) {
-        return participantService.addParticipant(participantDTO);
+    public ParticipantDTO addParticipant(@RequestParam String userName, @RequestParam(required = false) Long newMatchId) {
+        return participantService.addParticipant(userName, newMatchId);
     }
 
     @PutMapping("/{participantId}/assignToMatch")
@@ -48,5 +48,4 @@ public class ParticipantController {
         participantService.deleteParticipant(id);
         return "Participant with ID " + id + " has been deleted.";
     }
-
 }
