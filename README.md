@@ -57,6 +57,7 @@ The application includes essential features for user management, match organizat
   ```bash
   git clone https://github.com/yourusername/football-match-management.git
   cd football-match-management
+
 2. Configure Database:
   - Create a database in MySQL:
   ```bash
