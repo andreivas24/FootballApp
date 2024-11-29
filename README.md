@@ -57,11 +57,13 @@ The application includes essential features for user management, match organizat
   ```bash
   git clone https://github.com/yourusername/football-match-management.git
   cd football-match-management
+  ```
 
 2. Configure Database:
   - Create a database in MySQL:
   ```bash
   CREATE DATABASE football_app_db;
+  ```
 
   - Create a database in MySQL:
   ```bash
@@ -69,11 +71,13 @@ The application includes essential features for user management, match organizat
   spring.datasource.username=your_mysql_username
   spring.datasource.password=your_mysql_password
   spring.jpa.hibernate.ddl-auto=update
+  ```
 
 3. Build and Run the Project:
   - Use Maven to build and run the project:
   ```bash
   mvn spring-boot:run
+  ```
 
 4. Access the Application:
   - Open your browser and navigate to:
