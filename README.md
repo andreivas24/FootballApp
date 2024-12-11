@@ -55,7 +55,7 @@ The application includes essential features for user management, match organizat
 **Steps to Run**
 1. Clone the Repository:
   ```bash
-  git clone https://github.com/yourusername/football-match-management.git
+  git clone https://github.com/andreivas24/football-match-management.git
   cd football-match-management
   ```
 
